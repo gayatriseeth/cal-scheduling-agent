@@ -1,0 +1,58 @@
+#### I. The Problem
+- Manual scheduling is time-consuming
+- Back-and-forth emails for finding meeting times
+- Calendar integration gaps
+
+#### II. User Research
+- Target users: Small business owners, consultants, informal meeting times
+- Pain points identified
+- Success criteria defined
+
+#### III. Solution Design
+- Why conversational AI?
+- Cal.com API evaluation
+- Feature prioritization (MVP vs future)
+
+#### IV. Technical Implementation
+**Product decisions made:**
+- Chose GPT-4.1 for reliability over cost
+- Explicit duration tracking after initial bug
+- Simplified UX (removed unnecessary questions)
+
+**Key learning: Agent asked too many questions**
+- Initial: Agent asked for time of day preference
+- Root cause: Over-engineered conversation flow
+- Fix: Streamlined CollectPreferences task
+- Result: Faster bookings, better UX
+
+#### V. Challenges & Solutions
+
+**Challenge 1: Wrong Event Type Selected**
+```
+Problem: Agent booked 15min meeting instead of 30min
+Diagnosis: Duration context lost between tasks
+Solution: Explicit variable tracking with clear mapping
+Learning: State management critical in multi-turn conversations
+```
+
+**Challenge 2: Cancellation Not Working**
+```
+Problem: Platform doesn't support dynamic path parameters
+Workaround: Direct users to dashboard
+Learning: Not all APIs work with all platforms - understand constraints early
+
+**Challenge 3: Google Calendar API Authentication Complexity**
+Problem: Multiple authentication barriers blocked implementation (e.g. OAuth 2.0 flow setup, access tokens expiring after 1 hour, URI mismatch errors)
+Solution Attempted: Multiple approaches tried (OAuth Playground with custom credentials, Adding self as test user to bypass verification, Service account exploration)
+Workaround: Pivoted to Cal.com, which provided simpler API key authentication and faster time to working prototype
+Learning: Authentication complexity drove technology decision
+
+#### VI. Metrics & Impact
+User testing results pending
+Token cost analysis
+Time saved per booking
+
+#### VII. Future Roadmap
+Cancel meetings via agent
+GCal integration for greater flexibility
+Scale considerations
