@@ -84,10 +84,10 @@ Update your configuration with the IDs:
 "environment": {
   "cal_access_token": "YOUR_CAL_API_KEY",
   "cal_username": "your-username",
-  "event_type_id_15min": "3905384",
-  "event_type_id_30min": "3905383",
-  "event_type_id_45min": "3977849",
-  "event_type_id_60min": "3977848"
+  "event_type_id_15min": "event_type_id",
+  "event_type_id_30min": "event_type_id",
+  "event_type_id_45min": "event_type_id",
+  "event_type_id_60min": "event_type_id"
 }
 ```
 
