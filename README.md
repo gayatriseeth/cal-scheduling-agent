@@ -34,8 +34,39 @@ This agent enables users to:
 ## 🚀 Quick Start
 
 ### 1. Get Your Cal.com Event Type IDs
+### 1. Get Your Cal.com Event Type IDs
+
+You can find your event type IDs in the Cal.com dashboard URL when viewing an event type:
+```
+https://app.cal.com/event-types/[YOUR_EVENT_TYPE_ID]
+```
+
+Or via the v2 API:
 ```bash
-curl -X GET "https://api.cal.com/v1/event-types?apiKey=YOUR_API_KEY"
+curl -X GET "https://api.cal.com/v2/event-types" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "cal-api-version: 2024-08-13"
+```
+
+The response will include all your event types with their IDs and slugs:
+```json
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 1405384,
+      "slug": "15min",
+      "title": "15 Min Meeting",
+      "lengthInMinutes": 15
+    },
+    {
+      "id": 1405383,
+      "slug": "30min",
+      "title": "30 Min Meeting",
+      "lengthInMinutes": 30
+    }
+  ]
+}
 ```
 
 Note down the IDs for each duration.
