@@ -34,7 +34,6 @@ This agent enables users to:
 ## 🚀 Quick Start
 
 ### 1. Get Your Cal.com Event Type IDs
-### 1. Get Your Cal.com Event Type IDs
 
 You can find your event type IDs in the Cal.com dashboard URL when viewing an event type:
 ```
