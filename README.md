@@ -121,7 +121,7 @@ These are cosmetic/documentation issues that don't affect functionality:
 
 - [Setup Guide](./docs/setup-guide.md)
 - [Architecture Deep Dive](./docs/architecture.md) (coming soon)
-- [Development Notes](./docs/development-process.md)
+- [Development Notes](./development-process.md)
 
 ## 🤝 Contributing
 
