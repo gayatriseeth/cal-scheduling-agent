@@ -163,10 +163,20 @@ The agent uses a task-based architecture with these components:
 
 ## 🐛 Known Limitations
 
+### Feature Limitations
 - **Cancellation**: Requires manual cancellation via Cal.com dashboard. (agent enhancements coming soon)
 - **Rescheduling**: Not yet implemented
 - **Recurring Meetings**: Not supported
 - **Team Events**: Single-user events only
+
+### Configuration Issues (Won't Fix)
+These are cosmetic/documentation issues that don't affect functionality:
+
+- **Tool Documentation Mismatch**: Plan documentation references `CheckCalendarAvailability` and `SendCalendarInvite`, but actual tools are `CheckCalAvailability` and `CreateBooking`. Task flows use correct names.
+- **Task Name/ID Inconsistency**: Task names (e.g., "CollectPreferences") don't match their IDs (e.g., "Tf2A6cGFVWZg1I1yqd_-m"). Only affects code readability.
+- **Outdated Plan Metadata**: `plan_prompt` mentions 25-min meetings and 8am-4pm restrictions that don't exist in actual implementation. Legacy documentation only.
+- **Invalid Task Flow References**: Fallback tasks (`Confirm_Meeting_Details`, `Collect_Meeting_Preferences`) don't exist. Primary flow works correctly.
+- **JSON Formatting**: Task steps contain excessive quote escaping and `\r` characters. Doesn't affect parsing or execution.
 
 ## 🔮 Future Enhancements
 
@@ -174,13 +184,12 @@ The agent uses a task-based architecture with these components:
 - [ ] Rescheduling workflow  
 - [ ] Multi-timezone support for team scheduling
 - [ ] Meeting type recommendations based on past bookings
-- [ ] Slack/Teams integration
 
 ## 📚 Documentation
 
 - [Setup Guide](./docs/setup-guide.md)
-- [API Reference](./docs/api-reference.md)
-- [Architecture Deep Dive](./docs/architecture.md)
+- [API Reference](./docs/api-reference.md) (coming soon)
+- [Architecture Deep Dive](./docs/architecture.md) (coming soon)
 - [Development Notes](./docs/development-process.md)
 
 ## 🤝 Contributing
