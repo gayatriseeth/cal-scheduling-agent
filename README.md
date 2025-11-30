@@ -20,7 +20,7 @@ This agent enables users to:
 
 ## 🛠️ Tech Stack
 
-- **Framework**: LangGraph (state management and agent orchestration)
+- **Framework**: LangGraph (state management and agent orchestration, implemented on Agentman)
 - **LLM**: GPT-4.1
 - **API Integration**: Cal.com API v2
 - **Authentication**: Cal.com API Key (Bearer token)
