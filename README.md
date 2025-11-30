@@ -38,23 +38,15 @@ This agent enables users to:
 📖 **[Detailed setup instructions →](setup_guide.md)**
 
 ### 1. Configure Cal.com Event Types
-Create four event types in your Cal.com dashboard.
-
 ### 2. Get Your Event Type IDs
-Find them in your Cal.com dashboard or via API.
-
 ### 3. Configure Environment
-Update `agent-config.json` with your IDs.
-
 ### 4. Deploy to Agentman
-Upload `agent-config.json` to your Agentman dashboard and activate the agent.
 
 ## 🏗️ Architecture
 
 ### Agent Flow
 ```
-CollectPreferences → CheckAvailability → PresentAvailability 
-→ CollectAttendeeInfo → CreateBooking
+CollectPreferences → CheckAvailability → PresentAvailability → CollectAttendeeInfo → CreateBooking
 ```
 
 ### State Graph (LangGraph)
