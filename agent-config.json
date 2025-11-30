@@ -1,0 +1,261 @@
+{
+  "id": 1317,
+  "name": "Meeting Booker_final",
+  "agent_type": "conversational",
+  "plan_prompt": {
+    "instructions": "A conversational agent that assists users in booking meetings.",
+    "more_instructions": "The agent should prompt users for preferred days and times, collect their email address, only allow booking meetings between 8am and 4pm. The agent must send calendar invitations to the user's email address as part of the booking process. The agent should handle basic scheduling conversations politely and efficiently."
+  },
+  "plan": {
+    "goal_details": {
+      "agent_goal": "A conversational agent that helps users find available meeting times on their Cal.com calendar, reserve and book the time on the calendar.",
+      "description": "The agent should ask users for their preferred date range and meeting duration, then check Cal.com calendar availability and present available time slots. Once the user confirms the time, the agent reserves meetings, and then sends a confirmation.",
+      "guardrails": "The agent finds available times, reserves the selected time, and confirms the booking on the calendar. All responses should be helpful and efficient.",
+      "tone": "Your interactions should be friendly, professional, and focused on efficiently scheduling meetings with minimal back-and-forth."
+    },
+    "variables": {
+      "preferred_date_range": "Object containing start_date and end_date for availability check",
+      "meeting_duration": "Duration of meeting in minutes (default: 30)",
+      "available_slots": "Array of available time slots returned from Cal.com API",
+      "attendee_timezone": "Attendee's timezone (default: America/Los_Angeles)",
+      "attendee_name": "Attendee's full name for the booking",
+      "attendee_email": "Attendee's email address for the booking",
+      "guest_emails": "Array of additional guest email addresses (optional)",
+      "meeting_notes": "Meeting agenda or notes (optional)"
+    },
+    "tools": {
+      "CheckCalendarAvailability": "Tool to check availability on Google Calendar.",
+      "SendCalendarInvite": "Tool to send a calendar invitation to the user's email address."
+    },
+    "task_flow": {
+      "starting_task": "WRFNF61050T-9qQukwid-",
+      "task_to_return_to": "WRFNF61050T-9qQukwid-",
+      "fallback": "WRFNF61050T-9qQukwid-"
+    },
+    "tasks": [
+      {
+        "task_name": "Welcome",
+        "steps": [
+          "Greet user.\r",
+          "\r",
+          "If date already provided → go to CheckAvailability\r",
+          "\r",
+          "Else → CollectPreferences\r",
+          "\r",
+          "At any time if the user asks for:\r",
+          "- different dates/times,\r",
+          "- additional times,\r",
+          "- different duration,\r",
+          "- a specific time (e.g., “1pm?”, “2:30pm?”, “later in the afternoon?”),\r",
+          "- or a different time window (morning/afternoon/evening),\r",
+          "\r",
+          "→ ALWAYS call CheckCalAvailability again using the new information instead of relying on previously stored availability.\r",
+          "Under ALL circumstances, NEVER show more than 3 slots per category, clearly labeled."
+        ],
+        "task_id": "WRFNF61050T-9qQukwid-"
+      },
+      {
+        "task_name": "CollectPreferences",
+        "steps": [
+          "If date range missing → ask.\r",
+          "\r",
+          "If duration missing → default to 30 min.\r",
+          "\r",
+          "Store timezone (default America/Los_Angeles).\r",
+          "\r",
+          "Once all are known: tell user you’re checking → CheckAvailability."
+        ],
+        "task_id": "Tf2A6cGFVWZg1I1yqd_-m"
+      },
+      {
+        "task_name": "CheckAvailability",
+        "steps": [
+          "Convert dates to ISO.\r",
+          "\r",
+          "Map duration to eventTypeSlug\r",
+          "\r",
+          "Call CheckCalAvailability with matched eventTypeSlug.\r",
+          "\r",
+          "Store results in available_slots.\r",
+          "\r",
+          "On success → PresentAvailability\r",
+          "\r",
+          "On error → apologize + offer retry."
+        ],
+        "task_id": "E-VvS-KYn0EEmXVd_IrdA"
+      },
+      {
+        "task_name": "PresentAvailability",
+        "steps": [
+          "Filter returned slots to the 8am–4pm rule.\r",
+          "\r",
+          "Partition into:\r",
+          "Morning (8am–12pm)\r",
+          "Afternoon (12pm–4pm)\r",
+          "\r",
+          "Show up to 3 slots per category, clearly labeled.\r",
+          "\r",
+          "If a category has none, explicitly say so.\r",
+          "\r",
+          "Ask user to choose a slot.\r",
+          "\r",
+          "If the user asks for:\r",
+          "- different dates/times,\r",
+          "- additional times,\r",
+          "- different duration,\r",
+          "- a specific time (e.g., “1pm?”, “2:30pm?”, “later in the afternoon?”),\r",
+          "- or a different time window (morning/afternoon/evening),\r",
+          "\r",
+          "→ ALWAYS call CheckCalAvailability again using the same date range and duration, \r",
+          "instead of relying on previously stored availability.\r",
+          "\r",
+          "Do not infer or assume availability. Never answer from memory. \r",
+          "Every new time- or date-related query MUST trigger a fresh CheckCalAvailability tool call.\r",
+          "\r",
+          "If they pick a slot → CollectAttendeeInfo."
+        ],
+        "task_id": "jyb2g2IP2kDXyny-sIcYO"
+      },
+      {
+        "task_name": "CollectAttendeeInfo",
+        "steps": [
+          "Ask for:\r",
+          "Full name\r",
+          "Email\r",
+          "Optional guests\r",
+          "Optional meeting notes\r",
+          "Store all.\r",
+          "Then → CreateBooking"
+        ],
+        "task_id": "SeR6QqH0W9BEdd-CWDryR"
+      },
+      {
+        "task_name": "CreateBooking",
+        "steps": [
+          "Convert selected slot start to UTC (Z).",
+          "",
+          "Map duration → eventTypeId: 15→1234567, 30→1234568, 45→1234569, 60→1234560\\\"\",",
+          "",
+          "Call ${tool:CreateBooking} with attendee + guests + notes.",
+          "",
+          "On success:",
+          "",
+          "Confirm details",
+          "",
+          "List attendees",
+          "",
+          "Provide meeting link",
+          "",
+          "State that invites were sent.",
+          "",
+          "On failure: apologize + offer another time.",
+          ""
+        ],
+        "task_id": "CreateBooking"
+      }
+    ]
+  },
+  "tools": [
+    {
+      "name": "CheckCalAvailability",
+      "type": "http",
+      "args_schema": {
+        "name": "CalAvailabilityInput",
+        "fields": {
+          "params": {
+            "required": true,
+            "field_type": "string",
+            "description": "A JSON object with 'start', 'end', 'eventTypeSlug', and optionally 'timeZone'. Map duration to eventTypeSlug: 15 minutes = '15min', 30 minutes = '30min', 45 minutes = '45-min-meeting', 60 minutes = '60-min-meeting'. Only include timeZone if user specifies it. Example: {\"start\": \"2025-11-22\", \"end\": \"2025-11-25\", \"eventTypeSlug\": \"30min\", \"timeZone\": \"America/Los_Angeles\"}"
+          }
+        }
+      },
+      "description": "Checks available time slots on Cal.com using the v2 slots API. Returns a map of available slots indexed by date.",
+      "init_params": {
+        "url": "https://api.cal.com/v2/slots",
+        "data": {},
+        "method": "GET",
+        "params": {
+          "end": "",
+          "start": "",
+          "timeZone": "",
+          "username": "your_cal_username",
+          "eventTypeSlug": ""
+        },
+        "headers": {
+          "Authorization": "Bearer {{cal_access_token}}",
+          "cal-api-version": "2024-09-04"
+        },
+        "raw_url": "https://api.cal.com/v2/slots",
+        "path_params": {}
+      },
+      "return_direct": false
+    },
+    {
+      "name": "CreateBooking",
+      "type": "http",
+      "args_schema": {
+        "name": "CreateBookingInput",
+        "fields": {
+          "data": {
+            "required": true,
+            "field_type": "string",
+            "description": "A JSON object with 'start', 'attendee', 'eventTypeId', and optionally 'guests' (array of email strings) and 'bookingFieldsResponses' (object with 'notes' field for agenda). Map duration to eventTypeId using environment variables: 15min={{event_type_id_15min}}, 30min={{event_type_id_30min}}, 45min={{event_type_id_45min}}, 60min={{event_type_id_60min}}. Start time MUST be in UTC with Z suffix. Example: {\"start\": \"2025-11-25T19:15:00Z\", \"attendee\": {\"name\": \"John Doe\", \"email\": \"[email protected]\", \"timeZone\": \"America/Los_Angeles\"}, \"eventTypeId\": 3905383, \"guests\": [\"[email protected]\"], \"bookingFieldsResponses\": {\"notes\": \"Discuss Q4 strategy\"}}"
+          }
+        }
+      },
+      "description": "Creates a booking on Cal.com and automatically sends calendar invitations to the attendee and any additional guests. Supports adding meeting agenda/notes via bookingFieldsResponses. The booking is confirmed immediately and creates events in connected calendars.",
+      "init_params": {
+        "url": "https://api.cal.com/v2/bookings",
+        "data": {},
+        "method": "POST",
+        "params": {},
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer {{cal_access_token}}",
+          "cal-api-version": "2024-08-13"
+        },
+        "raw_url": "https://api.cal.com/v2/bookings",
+        "path_params": {}
+      },
+      "return_direct": false
+    }
+  ],
+  "created_on": "2025-11-30T06:03:47.532145",
+  "published": false,
+  "last_published_date": null,
+  "last_modified_date": "2025-11-29T23:04:09.610428",
+  "environment": {
+    "cal_access_token": "your_cal_access_token"
+  },
+  "llm_config": {
+    "model_name": "gpt-4.1",
+    "provider": "openai",
+    "temperature": 0.7,
+    "json_mode": false,
+    "reasoning_effort": null,
+    "verbosity": null,
+    "enable_thinking": false,
+    "thinking_budget_tokens": null,
+    "thinking_budget": null,
+    "thinking_level": null,
+    "include_thoughts": false,
+    "is_default": true
+  },
+  "agentId": "PLACEHOLDER_zufxhlgmna",
+  "freeformTools": [],
+  "knowledgeCollections": [],
+  "llmConfig": {
+    "model_name": "gpt-4.1",
+    "provider": "openai",
+    "temperature": 0.7,
+    "json_mode": false,
+    "reasoning_effort": null,
+    "verbosity": null,
+    "enable_thinking": false,
+    "thinking_budget_tokens": null,
+    "thinking_budget": null,
+    "thinking_level": null,
+    "include_thoughts": false,
+    "is_default": true
+  }
+}
